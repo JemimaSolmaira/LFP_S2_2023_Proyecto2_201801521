@@ -1,0 +1,513 @@
+digraph "Nodo1" { 
+
+fontname="black"
+
+node [fontname="black"]
+
+edge [fontname="black"]
+
+graph [newrank = true , nodesep = 0.8, overlap = true, splines = false]
+
+node [fixedsize = false, fontsize = 24, height = 2, shape = "circle", style = "filled,setlinewidth(5)", width = 2.2, shape = "circle",color = "black" , fillcolor = cornflowerblue ]
+
+edge [ arrowsize = 0.5, weight = 2, style = "filled,setlinewidth(5)"row = func, arrowhead = 0.1,color = "black", arrowhead = "", row = func ]
+
+
+subgraph Comentario {
+inicio0 [label = "Inicio"]
+comentario1 [label = "Comentario"]
+C2 [label = "tk_string"]
+
+inicio0 -> comentario1
+comentario1->C2
+comentario1->comentario_sig
+
+comentario_sig [label = "Comentario"]
+}
+
+subgraph claves {
+    
+inicio4 [label = "Inicio"]
+claves5 [label = "Claves"]
+C6 [label = "tk_claves"]
+C7 [label = "tk_igual"]
+C8 [label =  "tk_corchete_in"]
+  
+
+inicio4 -> claves5
+claves5 -> C6
+claves5 -> C7
+claves5 -> C8
+   
+    
+}
+
+subgraph claves_inicio {
+    
+claves5 -> grupo_claves1 
+
+grupo_claves1 [label =  "Grupo_claves"]    
+
+G10  [label = "tk_comillas"]
+G11  [label =  "tk_string"] 
+G12  [label =  "tk_comillas" ]  
+ 
+
+grupo_claves1 -> G10
+grupo_claves1 -> G11
+grupo_claves1 -> G12
+
+
+}
+
+
+
+subgraph Claves_dinamica {
+grupo_claves1 -> clave_sig1 
+
+clave_sig1  [label =  "clave_sig" ] 
+
+GC13 [label = "tk_coma" ]
+GC14 [label = "tk_comillas"]
+GC15 [label = "tk_string"]
+GC16 [label = "tk_comillas"]
+
+clave_sig1 -> GC13
+clave_sig1 -> GC14
+clave_sig1 -> GC15
+clave_sig1 -> GC16
+
+
+clave_sig1 -> grupo_claves2
+grupo_claves2 [label = "Grupo_claves" ]
+
+
+
+}
+
+subgraph claves_dinamicas2 {
+grupo_claves2 -> clave_sig4
+
+clave_sig4  [label =  "clave_sig" ]  
+
+GC25 [label = "tk_coma" ]
+GC26 [label = "tk_comillas"]
+GC27 [label = "tk_string"]
+GC28 [label = "tk_comillas"]
+
+
+
+clave_sig4 -> GC25
+clave_sig4 -> GC26
+clave_sig4 -> GC27
+clave_sig4 -> GC28 
+
+    
+clave_sig4 -> grupo_claves5    
+grupo_claves5 [label = "Grupo_claves" ]    
+}
+
+subgraph clave_fin{
+grupo_claves5 -> clave_sig5
+clave_sig5  [label =  "clave_sig" ] 
+    
+
+C9 [label =  "tk_corchete_fin"]
+clave_sig5 -> C9
+clave_sig5 -> inicio_registros    
+inicio_registros [label = "Inicio_registros"]    
+}
+
+
+
+
+subgraph Registro {
+    
+inicio_registros -> inicio30   
+inicio30 [label = "Inicio"]
+registros31 [label = "Registros"]
+C32 [label = "tk_registros"]
+C33 [label = "tk_igual"]
+C34 [label =  "tk_corchete_in"]
+grupo_registros35 [label =  "Grupo_registros"]
+
+inicio30 -> registros31
+registros31 -> C32
+registros31 -> C33
+registros31 -> C34
+registros31 -> grupo_registros35
+
+G39  [label = "tk_llave_in"]
+G35  [label = "tk_comillas"]
+G36  [label =  "tk_string"] 
+G37 [label =  "tk_comillas" ]  
+ 
+
+grupo_registros35 -> G39
+grupo_registros35 -> G35
+grupo_registros35 -> G36
+grupo_registros35 -> G37
+
+
+
+
+}
+
+
+subgraph Registro_dinamico {
+
+grupo_registros35 -> reg_sig38     
+reg_sig38  [label =  "reg_sig" ] 
+   
+    
+    
+GC40 [label = "tk_coma" ]
+GC41 [label = "tk_comillas"]
+GC42 [label = "tk_string"]
+GC43 [label = "tk_comillas"]
+
+
+reg_sig38 -> GC40
+reg_sig38 -> GC41
+reg_sig38 -> GC42
+reg_sig38 -> GC43    
+
+reg_sig38 -> grupo_registros47  
+grupo_registros47 [label = "grupo_registros" ] 
+
+}
+
+
+subgraph Registro_dinamico1 {
+
+grupo_registros47  -> reg_sig50
+reg_sig50  [label =  "reg_sig" ] 
+    
+    
+    
+GC51 [label = "tk_coma" ]
+GC52 [label = "tk_comillas"]
+GC53 [label = "tk_string"]
+GC54 [label = "tk_comillas"]
+
+
+reg_sig50 -> GC51
+reg_sig50 -> GC52
+reg_sig50 -> GC53
+reg_sig50 -> GC54    
+
+
+
+}
+
+
+subgraph fin_registro {
+
+reg_sig50 -> grupo_claves_fin 
+grupo_claves_fin [label = "Grupo_claves" ]
+ 
+    
+reg_fin  [label =  "reg_sig" ] 
+grupo_claves_fin -> reg_fin
+
+
+
+C60 [label =  "tk_llave_fin"]
+C61 [label =  "tk_corchete_fin"]
+reg_fin -> C60
+reg_fin-> C61
+
+
+}
+
+
+subgraph instrucciones {
+reg_fin -> inicio70  
+    
+inicio70 [label = "Inicio"]
+
+
+inicio70-> instrucciones71
+
+instrucciones71 [label = "instrucciones"]  
+
+}
+
+subgraph imprimir {
+ 
+instrucciones71 -> imprimir0    
+imprimir0 [label = "Imprimir"]
+C90 [label = "tk_imprimir"]
+C91 [label = "tk_parentesis_in"]
+C92 [label = "tk_comillas"]
+C93 [label =  "tk_string"]
+C94 [label =  "tk_comillas"]  
+C95 [label =  "tk_parentesis_fin"] 
+C96 [label =  "tk_punto_coma"] 
+
+imprimir0 -> C90
+imprimir0 -> C91
+imprimir0 -> C92
+imprimir0 -> C93
+imprimir0 -> C94
+imprimir0 -> C95
+imprimir0 -> C96
+
+imprimir0 -> instrucciones72
+instrucciones72 [label = "instrucciones"]  
+    
+}
+
+subgraph imprimirln {
+ 
+instrucciones72 -> imprimirln0    
+imprimirln0 [label = "Imprimirln"]
+C101 [label = "tk_imprimirln"]
+C102 [label = "tk_parentesis_in"]
+C103 [label = "tk_comillas"]
+C104 [label =  "tk_string"]
+C105 [label =  "tk_comillas"]  
+C106 [label =  "tk_parentesis_fin"] 
+C107 [label =  "tk_punto_coma"] 
+
+
+imprimirln0 -> C101
+imprimirln0 -> C102
+imprimirln0 -> C103
+imprimirln0 -> C104
+imprimirln0 -> C105
+imprimirln0 -> C106
+imprimirln0 -> C107
+
+imprimirln0 -> instrucciones73
+instrucciones73 [label = "instrucciones"]  
+    
+}
+
+
+
+subgraph datos {
+ 
+instrucciones73 -> datos0    
+datos0 [label = "Datos"]
+C111 [label = "tk_datos"]
+C112 [label = "tk_parentesis_in"]
+C113 [label =  "tk_parentesis_fin"] 
+C114 [label =  "tk_punto_coma"] 
+
+
+datos0 -> C111
+datos0 -> C112
+datos0 -> C113
+datos0 -> C114
+
+
+datos0 -> instrucciones74
+instrucciones74 [label = "instrucciones"]  
+    
+}
+
+
+
+subgraph conteo {
+ 
+instrucciones74 -> conteo0    
+conteo0 [label = "Conteo"]
+C115 [label = "tk_conteo"]
+C116 [label = "tk_parentesis_in"]
+C117 [label =  "tk_parentesis_fin"] 
+C118 [label =  "tk_punto_coma"] 
+
+
+conteo0 -> C115
+conteo0 -> C116
+conteo0 -> C117
+conteo0 -> C118
+
+
+conteo0 -> instrucciones75
+instrucciones75 [label = "instrucciones"]  
+    
+}
+
+
+subgraph promedio {
+ 
+instrucciones75 -> promedio0    
+promedio0 [label = "Promedio"]
+C119 [label = "tk_promedio"]
+C120 [label = "tk_parentesis_in"]
+C121 [label = "tk_comillas"]
+C122 [label =  "tk_string"]
+C123 [label =  "tk_comillas"]  
+C124 [label =  "tk_parentesis_fin"] 
+C125 [label =  "tk_punto_coma"] 
+
+
+promedio0 -> C119
+promedio0 -> C120
+promedio0 -> C121
+promedio0 -> C122
+promedio0 -> C123
+promedio0 -> C124
+promedio0 -> C125
+
+promedio0 -> instrucciones76
+instrucciones76 [label = "instrucciones"]  
+    
+}
+
+subgraph contarsi {
+ 
+instrucciones76 -> contarsi0    
+contarsi0 [label = "Contarsi"]
+C126 [label = "tk_contarsi"]
+C127 [label = "tk_parentesis_in"]
+C128 [label = "tk_comillas"]
+C129 [label =  "tk_string"]
+C130 [label =  "tk_comillas"] 
+C131 [label =  "tk_coma"]
+C132 [label =  "tk_numero"] 
+C133 [label =  "tk_parentesis_fin"] 
+C134 [label =  "tk_punto_coma"] 
+
+
+contarsi0 -> C126
+contarsi0 -> C127
+contarsi0 -> C128
+contarsi0 -> C129
+contarsi0 -> C130
+contarsi0 -> C131
+contarsi0 -> C132
+contarsi0 -> C133
+contarsi0 -> C134
+
+contarsi0-> instrucciones77
+instrucciones77 [label = "instrucciones"]
+
+    
+}
+
+
+subgraph max {
+ 
+instrucciones77 -> max0    
+max0 [label = "Max"]
+C135 [label = "tk_max"]
+C136 [label = "tk_parentesis_in"]
+C137 [label = "tk_comillas"]
+C138 [label =  "tk_string"]
+C139 [label =  "tk_comillas"]  
+C140 [label =  "tk_parentesis_fin"] 
+C141 [label =  "tk_punto_coma"] 
+
+
+max0 -> C135
+max0 -> C136
+max0 -> C137
+max0 -> C138
+max0 -> C139
+max0 -> C140
+max0 -> C141
+
+max0 -> instrucciones78
+instrucciones78 [label = "instrucciones"]  
+    
+}
+
+subgraph min {
+ 
+instrucciones78 -> min0    
+min0 [label = "Min"]
+C142 [label = "tk_min"]
+C143 [label = "tk_parentesis_in"]
+C144 [label = "tk_comillas"]
+C145 [label =  "tk_string"]
+C146 [label =  "tk_comillas"]  
+C147 [label =  "tk_parentesis_fin"] 
+C148 [label =  "tk_punto_coma"] 
+
+
+min0  -> C142
+min0  -> C143
+min0  -> C144
+min0  -> C145
+min0  -> C146
+min0  -> C147
+min0 -> C148
+
+min0 -> instrucciones79
+instrucciones79 [label = "instrucciones"]  
+    
+}
+
+
+subgraph suma {
+ 
+instrucciones79 -> suma0    
+suma0 [label = "suma"]
+C149 [label = "tk_suma"]
+C150 [label = "tk_parentesis_in"]
+C151 [label = "tk_comillas"]
+C152 [label =  "tk_string"]
+C153 [label =  "tk_comillas"]  
+C154 [label =  "tk_parentesis_fin"] 
+C155 [label =  "tk_punto_coma"] 
+
+
+suma0 -> C149
+suma0 -> C150
+suma0-> C151
+suma0-> C152
+suma0-> C153
+suma0-> C154
+suma0 -> C155
+
+suma0 -> instrucciones80
+instrucciones80 [label = "instrucciones"]  
+    
+}
+
+
+subgraph exportarreporte {
+ 
+instrucciones80 -> exportar0    
+exportar0 [label = "exportar_reporte"]
+C156 [label = "tk_exportarreporte"]
+C157 [label = "tk_parentesis_in"]
+C158 [label = "tk_comillas"]
+C159 [label =  "tk_string"]
+C160 [label =  "tk_comillas"]  
+C161 [label =  "tk_parentesis_fin"] 
+C162 [label =  "tk_punto_coma"] 
+
+
+exportar0 -> C156
+exportar0 -> C157
+exportar0-> C158
+exportar0-> C159
+exportar0-> C160
+exportar0 -> C161
+exportar0 -> C162
+
+exportar0 -> instrucciones81
+instrucciones81 [label = "instrucciones"]  
+    
+}
+
+subgraph instrucciones_fin {
+    
+instrucciones81 -> fin
+fin [label = "epsilon/fin"]
+    
+}
+
+
+
+}
+
+
+
+
+
+
