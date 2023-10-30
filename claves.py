@@ -6,12 +6,12 @@ class claves:
         self.patron = ["tk_claves", "tk_igual", "tk_corchete_in", "tk_grupo_claves", "tk_corchete_fin", "fin"]
         self.datos = [None, None, None, None, None]
         self.contador = 0
-        self.palabras_reservados = ["claves", "clave", "registros", "registro","[" , "]" ,"imprimir", ",", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte" ]
+        self.palabras_reservados = ["claves", "clave", "registros", "registro","[" , "]" ,"imprimir", ",", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte", "#"]
         
     def inicio_clave(self, token, dato):
         print (token, dato)
         if token in self.patron:
-            self.llenar_datos(token, dato)
+            self .llenar_datos(token, dato)
         else:
             palabra = dato.lower()
             if palabra in self.palabras_reservados and self.contador > 2:   
@@ -111,7 +111,7 @@ class registros:
         self.patron = ["tk_registros", "tk_igual", "tk_corchete_in", "tk_grupo_registros", "tk_corchete_fin", "fin"]
         self.datos = [None, None, None, None, None]
         self.contador = 0
-        self.palabras_reservados = ["claves", "clave", "registros", "registro", "=","[" , "]" ,"imprimir", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte" ]
+        self.palabras_reservados = ["claves", "clave", "registros", "registro", "=","[" , "]" ,"imprimir", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte", "#"]
         self.informacion = [None, None, None, None, None]
         self.errores = []
         

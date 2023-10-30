@@ -6,7 +6,7 @@ prueba de para el documento
 '''  
 prueba2 para el documento 
 
-'''
+
 *
 claves  = [ "codigo" , "producto"  , "precio_compra", "precio_venta" , "stock" ] 
 # Hola mundo2
@@ -23,7 +23,7 @@ prueba4 para el documento
 Registros = [
    {1, "Barbacoa", 20.00 , 10.50, 60 }
     {2, "Salsa", 13.00 , 16.00, 7}
-    {3, "Mayonesa", 15.00, 18.00, 8} 
+    {3, "Mayonesa", 15.00, 18.00, 8}
     {4, "Mostaza", 14.00, 16.00, 40}
     {5, "Ranch", 17.00, 21.00, 80}
     {6, "Mango" , 14.00, 22.00, 90}
@@ -42,7 +42,7 @@ sumar("stock");
 max("precio_venta"); 
 datos();
 '''  
-prueba4 para el documento 
+prueba5 para el documento 
 
 '''
 imprimir ( "Reporte de" );

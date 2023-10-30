@@ -19,101 +19,13 @@ class parserL:
         self.arbol_derivacion = []
         
 
-    def inicio(self):
-        self.poner_comentario()
-        
-       
-    def poner_comentario(self):
-        pass
-    
-
-
-    def comentario(self):
-        token = self.tokens.pop(0)
-        comillas = ""
-        cant_comillas = 0
-        texto_numeral = False
-        texto_comillas = False
-        texto = ""
-        if token.token == "tk_salto_linea":
-            token  = self.tokens.pop(0)
-        
-        if token.token == "tk_sim_numeral":
-            texto_numeral = True
-        
-        elif token.token == "tk_comillas":
-     
-            comillas += token.palabra
-            cant_comillas += 1
-            while cant_comillas != 3:
-                    
-                token = self.tokens.pop(0)
-                    
-                if token.token == "tk_comillas":
-                    comillas += token.palabra
-                        
-                    cant_comillas += 1
-                        
-                else:
-                    error = ['"', "Error Sintactico: Se esperaba una comilla", token.linea, token.col]
-                    self.errores.append(error)
-                    print("Error: Se esperaba una comilla")
-                    #error de  comilla, error sintactico
-            print(cant_comillas)
-            
-    
-            
-            if cant_comillas == 3:
-                texto_comillas = True
-                        
-            
-        if texto_numeral:
-            #token = self.tokens.pop()
-            while token.token != "tk_salto_linea":
-                texto += token.palabra
-                token = self.tokens[0]
-                if token.token != "tk_salto_linea":
-                    self.tokens.pop(0)
-                    
-
-        
-        if texto_comillas:
-            token = self.tokens.pop()
-            while token.token != "tk_comillas":
-                texto += token.palabra
-                token = self.tokens[0]
-                if token.token != "tk_comillas":
-                    self.tokens.pop(0)
-            
-        
-        
-        if cant_comillas == 3: 
-            cant_comillas = 0 
-            token = self.tokens.pop(0)  
-            if token.token == "tk_comillas":
-                comillas = token.palabra
-                cant_comillas += 1
-                while cant_comillas != 3:
-                    token = self.tokens.pop(0)
-                    if token.token == "tk_comillas":
-                        comillas += token.palabra
-                        cant_comillas += 1
-                    else:
-                        error = ['"', "Error Sintactico: Se esperaba una comilla", token.linea, token.col]
-                        self.errores.append(error)
-                        print("Error: Se esperaba una comilla")
-                        #error de  comilla, error sintactico
-                        
-            
-        return texto                 
-        
-                        
-
     
     def comentario2(self):
 
         token = self.tokens[0]
         frase = ""
+        comillas_iniciales = False
+        texto = False
        
                     
         if token.token == "tk_sim_numeral":
@@ -147,18 +59,28 @@ class parserL:
             token = self.tokens.pop(0)
             while token.token == "tk_comillas":
                 token = self.tokens.pop(0)
+                comillas_iniciales = True
                 
+            detener = False
             
-            while token.token != "tk_comillas":
+            while detener == False:
                 print(token.token)
                 token = self.tokens[0]
                 if token.token == "tk_espacio" or token.token == "tk_salto_linea" or token.token == "tk_string":
-                    frase += token.palabra
-                    self.tokens.pop(0)
-                    token = self.tokens[0]
-            
-            while token.token == "tk_comillas":
-                token = self.tokens.pop(0)        
+                    analizar = self.datos_string(token.palabra)
+                    if analizar == None:
+                        frase += token.palabra
+                        self.tokens.pop(0)
+                        token = self.tokens[0]
+                        texto = True
+                    else:
+                        detener = True
+                elif token.token == "tk_comillas":
+                    detener = True
+
+            if comillas_iniciales == True and texto == True:
+                while token.token == "tk_comillas":
+                    token = self.tokens.pop(0)        
                 
         return frase                
      
@@ -1044,11 +966,14 @@ class parserL:
                         valor = "tk_corchetes"
                         return valor
                     else:
+                        error = [token.palabra, "Error Sintactico: linea no reconocida", token.linea, token.col]
+                        self.errores.append(error)
                         while token.token != "tk_salto_linea":
                             self.tokens.pop(0)
                             token = self.tokens[0]
                             valor = None
 
+        
         '''
         if token.token == "tk_comillas":
             a = self.tokens[0]
@@ -1147,6 +1072,7 @@ class parserL:
             else:
                 print("Error: linea no reconocida")
                 token = self.tokens[0]
+                error = [token.palabra, "Error Sintactico: linea no reconocida", token.linea, token.col]
                 while token.token != "tk_salto_linea":
                             self.tokens.pop(0)
                             token = self.tokens[0]

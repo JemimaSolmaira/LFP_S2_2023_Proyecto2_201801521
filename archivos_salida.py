@@ -94,9 +94,10 @@ class salida:
         cadena = "<table border=\"1\">\n"
         cadena += "<tr>\n"
         
-        while len(valores) != 0:
-            print(valores[0])
-            cadena += "<th>"+ str(valores.pop(0)) +"</th>\n"
+        i = 0
+        while i < len(valores):
+            cadena += "<th>"+ str(valores[i]) +"</th>\n"
+            i+=1
         
         cadena += "</tr>\n"
         
@@ -132,8 +133,10 @@ class salida:
         pro = productos
         
         cadena = "<tr>\n"
-        while len(pro) != 0:
-            cadena += "<td>"+ str(pro.pop(0)) +"</td>\n"
+        i = 0
+        while i < len(pro):
+            cadena += "<td>"+ str(pro[i]) +"</td>\n"
+            i+=1
 
         
         return cadena   
