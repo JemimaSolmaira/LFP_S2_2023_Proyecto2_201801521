@@ -428,7 +428,6 @@ class parserL:
             self.espacios()
             
             tokens_leidos.append(token.token)
-            print (token.token)
 
             if token.token == "tk_string":
                 validar = self.datos_string(token.palabra)
@@ -445,18 +444,22 @@ class parserL:
             if  tk_valido == "tk_grupo_registros":
                 print("inicio de registros")
                 conjunto = self.conjunto_registros()
-                tk_valido =  validar_registro.inicio_registro(tk_valido, conjunto)               
+                tk_valido =  validar_registro.inicio_registro(tk_valido, conjunto, token)               
                 
             else:
-                tk_valido = validar_registro.inicio_registro(validar, token.palabra)
+                tk_valido = validar_registro.inicio_registro(validar, token.palabra, token)
                 self.tokens.pop(0)
                 #self.espacios()
         
             completado = validar_registro.completado()
             print(completado)
         
-        validar_registro.mostrar_datos()
-        
+        validar_registro.encontrar_error()
+        self.llenar_errores(validar_registro.errores)
+    
+    def llenar_errores(self, errores):
+        for i in errores:
+            self.errores.append(i)    
     
     def conjunto_registros(self):
         conjunto = []
@@ -512,14 +515,19 @@ class parserL:
             if tk_valido == "tk_grupo_palabras":
                 print("inicio de grupo de palabras")
                 grupo_palabras = self.grupo_palabras()
-                completado = grupo.inicio_grupo_registro(tk_valido, grupo_palabras)
+                completado = grupo.inicio_grupo_registro(tk_valido, grupo_palabras, token)
                 tk_valido = "tk_llave_fin"
             else:
-                completado = grupo.inicio_grupo_registro(validar, token.palabra)
+                completado = grupo.inicio_grupo_registro(validar, token.palabra, token)
                 self.tokens.pop(0)
             
             i+=1
             print(completado)
+        
+        print("buscar error")
+        print (grupo.informacion)
+        grupo.encontrar_error()
+        self.llenar_errores(grupo.errores)
             
         print("grupo de palabras")
         if grupo.vacio() == False:
@@ -528,7 +536,7 @@ class parserL:
         else:
             return None, grupo_completado
         
-        return grupo.datos, grupo_completado  
+        return grupo.datos, grupo_completado   
                 
              
     def grupo_palabras(self):
@@ -576,7 +584,7 @@ class parserL:
             self.espacios_sinsalto()
             token = self.tokens[0]
             self.espacios_sinsalto()
-            valores = palabras.inicio(token.token, token.palabra, es_numero)
+            valores = palabras.inicio(token.token, token.palabra, es_numero, token)
             completado = valores[0]
             grupo_completado = valores[1]
             
@@ -593,7 +601,10 @@ class parserL:
             dato = palabras.datos_coma[1]
             print(dato)  
         
-        palabras.encontrar_error(es_numero, grupo_completado) 
+        #errores
+        analizar = self.tokens[0].token
+        palabras.encontrar_error(es_numero, analizar)
+        self.llenar_errores(palabras.errores)
             
         return dato, grupo_completado
             
@@ -604,8 +615,7 @@ class parserL:
         self.espacios()
         token = self.tokens[0]
         completado = False
-        
-        print ("el token ingresado" + str(token.token))
+
         if token.token == "tk_salto_linea":
            
             token = self.tokens.pop(0)
@@ -619,12 +629,12 @@ class parserL:
             if token.token == "tk_comillas" or token.token == "tk_string" :
                 if token.token == "tk_string":
                     palabra = self.formar_palabra()
-                    completado = im.insertar_dato("tk_string", palabra)
+                    completado = im.insertar_dato("tk_string", palabra, token)
                 elif token.token == "tk_comillas":
-                    completado = im.insertar_dato(token.token, token.palabra)   
+                    completado = im.insertar_dato(token.token, token.palabra, token)   
                     self.tokens.pop(0)
             else:
-                completado = im.insertar_dato(token.token, token.palabra)
+                completado = im.insertar_dato(token.token, token.palabra, token)
                 self.tokens.pop(0)    
                 self.espacios_sinsalto()
 
@@ -633,8 +643,8 @@ class parserL:
             else:
                 token = self.tokens[0]
                 
-
-        print(im.datos[0], im.datos[3])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3]
                
@@ -655,13 +665,13 @@ class parserL:
             if token.token == "tk_comillas" or token.token == "tk_string"  :
                 if token.token == "tk_string":
                     palabra = self.formar_palabra()
-                    completado = im.insertar_dato("tk_string", palabra)
+                    completado = im.insertar_dato("tk_string", palabra, token)
                 elif token.token == "tk_comillas":
-                    completado = im.insertar_dato(token.token, token.palabra)   
+                    completado = im.insertar_dato(token.token, token.palabra,token)
                     self.tokens.pop(0)
             else:
                 
-                completado = im.insertar_dato(token.token, token.palabra)
+                completado = im.insertar_dato(token.token, token.palabra, token)
                 self.tokens.pop(0)    
                 self.espacios_sinsalto()
 
@@ -669,9 +679,9 @@ class parserL:
                 completado = True
             else:
                 token = self.tokens[0]
-                
 
-        print(im.datos[0], im.datos[3])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3]
 
@@ -689,7 +699,7 @@ class parserL:
             if tipo != None:
                 token.token = tipo
 
-            completado = im.insertar_dato(token.token, token.palabra)
+            completado = im.insertar_dato(token.token, token.palabra, token)
             self.tokens.pop(0)    
             self.espacios_sinsalto()
 
@@ -699,7 +709,8 @@ class parserL:
                 token = self.tokens[0]
                 
 
-        print(im.datos[0], im.datos[3])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3]
     
@@ -716,7 +727,7 @@ class parserL:
             if tipo != None:
                 token.token = tipo
 
-            completado = im.insertar_dato(token.token, token.palabra)
+            completado = im.insertar_dato(token.token, token.palabra, token)
             self.tokens.pop(0)    
             self.espacios_sinsalto()
 
@@ -726,7 +737,8 @@ class parserL:
                 token = self.tokens[0]
                 
 
-        print(im.datos[0], im.datos[3])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3]
     
@@ -746,12 +758,12 @@ class parserL:
             if token.token == "tk_comillas" or token.token == "tk_string" or token.token == "tk_numero" :
                 if token.token == "tk_string":
                     palabra = self.formar_palabra()
-                    completado = im.insertar_dato("tk_string", palabra)
+                    completado = im.insertar_dato("tk_string", palabra, token)
                 elif token.token == "tk_comillas":
-                    completado = im.insertar_dato(token.token, token.palabra)   
+                    completado = im.insertar_dato(token.token, token.palabra, token)  
                     self.tokens.pop(0)
             else:
-                completado = im.insertar_dato(token.token, token.palabra)
+                completado = im.insertar_dato(token.token, token.palabra, token)
                 self.tokens.pop(0)    
                 self.espacios_sinsalto()
 
@@ -760,8 +772,8 @@ class parserL:
             else:
                 token = self.tokens[0]
                 
-
-        print(im.datos[0], im.datos[3])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3]
     
@@ -783,14 +795,14 @@ class parserL:
             if token.token == "tk_comillas" or token.token == "tk_string":
                 if token.token == "tk_string":
                     palabra = self.formar_palabra()
-                    completado = im.insertar_dato("tk_string", palabra)
+                    completado = im.insertar_dato("tk_string", palabra, token)
                 elif token.token == "tk_comillas":
-                    completado = im.insertar_dato(token.token, token.palabra)   
+                    completado = im.insertar_dato(token.token, token.palabra, token) 
                     self.tokens.pop(0)
 
             else:
 
-                completado = im.insertar_dato(token.token, token.palabra)
+                completado = im.insertar_dato(token.token, token.palabra, token)
                 self.tokens.pop(0)    
                 self.espacios_sinsalto()
 
@@ -801,6 +813,8 @@ class parserL:
                 
 
         print(im.datos[0], im.datos[3], im.datos[6])
+        im.ejecutar_errores()
+        self.llenar_errores(im.errores)
         
         return im.datos[0], im.datos[3] , im.datos[6]
     
@@ -954,7 +968,7 @@ class parserL:
     def formar_palabra(self):
         palabra = ""
         token = self.tokens[0]
-        while token.token != "tk_comillas":
+        while token.token != "tk_comillas" and token.token != "tk_salto_linea" and token.token != "tk_parentesis_fin" and token.token != "tk_punto_coma":
             palabra += str(token.palabra)
             self.tokens.pop(0)
             token = self.tokens[0]
@@ -1186,11 +1200,14 @@ if __name__ == '__main__':
     imprimir_consola = par.exportar_datos()
     
     for i in imprimir_consola:
-        print(i.accion, i.dato)
+        print("accion" + i.accion, "dato" + str(i.dato))
         
     print(par.palabras_clave)
 
     print(par.datos_registros)
+    
 
+
+    print (par.errores)
 
 
