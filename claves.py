@@ -1468,260 +1468,347 @@ class sumar:
     
 class maximo:
     def __init__(self):
+        self.lexemas = ["max", "(", '"', "String", '"', ")", ";"]
         self.patron = ["tk_max", "tk_parentesis_in", "tk_comillas" ,  "tk_string",  "tk_comillas" , "tk_parentesis_fin", "tk_punto_coma" , "fin"]
         self.datos = [None, None, None, None, None, None, None]
         self.contador = 0
         self.palabras_reservados = ["claves", "clave", "registros", "registro", "=","[" , "]" ,"imprimir", ",", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte", "{", "}", "\n"]
+        self.informacion = [None, None, None, None, None, None, None]
+        self.errores = []
+        self.orden = []
 
-    def insertar_dato(self,token , dato):
+    def insertar_dato(self,token , dato, inf):
         fin = False
-        token_esperado = self.patron[self.contador]
         
         if token == "tk_max":
             if self.datos[0] == None:
             
                 self.datos[0] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, imprimir no esperado")
+                self.informacion[0] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, imprimir repetido")
+                error = [dato, "error sintactico: max repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_parentesis_in":
             if self.datos[1] == None:
                 self.datos[1] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[1] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
+                
                 
         elif token == "tk_comillas":
             
             if self.datos[2] == None:
                 self.datos[2] = dato
+                self.informacion[2] = inf
+                self.orden.append(token)
+                
             else:
                 if self.datos[4] == None:
                     self.datos[4] = dato
+                    self.informacion[4] = inf
+                    self.orden.append(token)
                 else:
                     print("error sintactico, comillas extras")
+                    error = [dato, "error sintactico: comillas extras", inf.linea, inf.col]
+                    self.errores.append(error)
             
-            if token == token_esperado:
-                self.contador += 1
-            else:
-                print("error sintactico, comillas no esperadas")
                 
         elif token == "tk_string" :
             if self.datos[3] == None:
                 self.datos[3] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, string no esperado")
+                self.informacion[3] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, string repetido")
+                errores = [dato, "error sintactico: string repetido", inf.linea, inf.col]
+                self.errores.append(errores)
                 
         elif token == "tk_parentesis_fin":
             if self.datos[5] == None:
                 self.datos[5] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[5] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_punto_coma":
             if self.datos[6] == None:
                 self.datos[6] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, punto y coma no esperado")
+                self.informacion[6] = inf
+                self.orden.append(token)
             else:
-                print("error sintactico, punto y coma repetido")
+                error = [dato, "error sintactico: punto y coma repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_salto_linea":
             fin = True
             
         return fin
         
-        
+    
     def encontrar_errores(self):
         for i in self.datos:
             indice = self.datos.index(i)
             if i == None:
-                token = self.patron[indice]
-                print("error sintactico" + "se esperaba: " + token)
+                lexema = self.lexemas[indice]
+                inf = self.encontrar_indice(indice)
+                print("error sintactico" + "se esperaba: " )
+                error = [lexema, "error sintactico: se esperaba caracter o palabra reservada", inf.linea, inf.col]
+                self.errores.append(error)
+                
+    def encontrar_indice(self, indice):
+        inf = self.informacion[indice]
+        if inf != None:
+            return inf
+        else:
+            if indice == len(self.informacion) - 1:
+                return self.informacion[indice - 1]
+            elif indice == 0:
+                return self.informacion[1]
+            else:
+                return self.informacion[indice - 1]
+    
+    def revisar_orden(self):
+        i = 0
+        j = 0
+        while i <= len(self.datos) - 1:
+            if self.datos[i] != None:
+                if self.patron[i] != self.orden[j]:
+                    print("error sintactico, orden incorrecto")
+                    error = [self.datos[i], "error sintactico: orden incorrecto", self.informacion[i].linea, self.informacion[i].col]
+                    self.errores.append(error)
+                i += 1
+                j += 1
+            else:
+                i += 1
+       
+    def ejecutar_errores(self):
+        self.encontrar_errores()
+        self.revisar_orden()
     
 class minimo:
     def __init__(self):
+        self.lexemas = ["min", "(", '"', "String", '"', ")", ";"]
         self.patron = ["tk_min", "tk_parentesis_in", "tk_comillas" ,  "tk_string",  "tk_comillas" , "tk_parentesis_fin", "tk_punto_coma" , "fin"]
         self.datos = [None, None, None, None, None, None, None]
         self.contador = 0
         self.palabras_reservados = ["claves", "clave", "registros", "registro", "=","[" , "]" ,"imprimir", ",", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte", "{", "}", "\n"]
+        self.informacion = [None, None, None, None, None, None, None]
+        self.errores = []
+        self.orden = []
 
-    def insertar_dato(self,token , dato):
+
+    def insertar_dato(self,token , dato, inf):
         fin = False
-        token_esperado = self.patron[self.contador]
         
         if token == "tk_min":
             if self.datos[0] == None:
             
                 self.datos[0] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, imprimir no esperado")
+                self.informacion[0] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, imprimir repetido")
+                error = [dato, "error sintactico: min repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_parentesis_in":
             if self.datos[1] == None:
                 self.datos[1] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[1] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_comillas":
             
             if self.datos[2] == None:
                 self.datos[2] = dato
+                self.informacion[2] = inf
+                self.orden.append(token)
             else:
                 if self.datos[4] == None:
                     self.datos[4] = dato
+                    self.informacion[4] = inf
+                    self.orden.append(token)
                 else:
                     print("error sintactico, comillas extras")
+                    error = [dato, "error sintactico: comillas extras", inf.linea, inf.col]
+                    self.errores.append(error)
             
-            if token == token_esperado:
-                self.contador += 1
-            else:
-                print("error sintactico, comillas no esperadas")
                 
         elif token == "tk_string" :
             if self.datos[3] == None:
                 self.datos[3] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, string no esperado")
+                self.informacion[3] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, string repetido")
+                errores = [dato, "error sintactico: string repetido", inf.linea, inf.col]
+                self.errores.append(errores)
                 
         elif token == "tk_parentesis_fin":
             if self.datos[5] == None:
                 self.datos[5] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[5] = inf
+                self.orden.append(token)
+                
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_punto_coma":
             if self.datos[6] == None:
                 self.datos[6] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, punto y coma no esperado")
+                self.informacion[6] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, punto y coma repetido")
+                error = [dato, "error sintactico: punto y coma repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_salto_linea":
             fin = True
             
         return fin
         
-        
     def encontrar_errores(self):
         for i in self.datos:
             indice = self.datos.index(i)
             if i == None:
-                token = self.patron[indice]
-                print("error sintactico" + "se esperaba: " + token)
+                lexema = self.lexemas[indice]
+                inf = self.encontrar_indice(indice)
+                print("error sintactico" + "se esperaba: " )
+                error = [lexema, "error sintactico: se esperaba caracter o palabra reservada", inf.linea, inf.col]
+                self.errores.append(error)
+                
+    def encontrar_indice(self, indice):
+        inf = self.informacion[indice]
+        if inf != None:
+            return inf
+        else:
+            if indice == len(self.informacion) - 1:
+                return self.informacion[indice - 1]
+            elif indice == 0:
+                return self.informacion[1]
+            else:
+                return self.informacion[indice - 1]
+    
+    def revisar_orden(self):
+        i = 0
+        j = 0
+        while i <= len(self.datos) - 1:
+            if self.datos[i] != None:
+                if self.patron[i] != self.orden[j]:
+                    print("error sintactico, orden incorrecto")
+                    error = [self.datos[i], "error sintactico: orden incorrecto", self.informacion[i].linea, self.informacion[i].col]
+                    self.errores.append(error)
+                i += 1
+                j += 1
+            else:
+                i += 1
+       
+    def ejecutar_errores(self):
+        self.encontrar_errores()
+        self.revisar_orden()
+    
     
 class exportar_reporte:
     def __init__(self):
+        self.lexemas = ["exportarreporte", "(", '"', "String", '"', ",", '"', "String", '"', ")", ";"]
         self.patron = ["tk_exportarreporte", "tk_parentesis_in", "tk_comillas" ,  "tk_string",  "tk_comillas" , "tk_parentesis_fin", "tk_punto_coma" , "fin"]
         self.datos = [None, None, None, None, None, None, None]
         self.contador = 0
         self.palabras_reservados = ["claves", "clave", "registros", "registro", "=","[" , "]" ,"imprimir", ",", "imprimirln", "datos", "conteo", "promedio", "contarsi", "sumar" ,"max", "min", "exportarreporte", "{", "}", "\n"]
+        self.informacion = [None, None, None, None, None, None, None]
+        self.errores = []
+        self.orden = []
 
-    def insertar_dato(self,token , dato):
+    def insertar_dato(self,token , dato, inf):
         fin = False
-        token_esperado = self.patron[self.contador]
-        
+
         if token == "tk_exportarreporte":
             if self.datos[0] == None:
             
                 self.datos[0] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, imprimir no esperado")
+                self.informacion[0] = inf
+                self.orden.append(token)
+                
             else:
                 print("error sintactico, imprimir repetido")
+                error = [dato, "error sintactico: exportarreporte repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_parentesis_in":
             if self.datos[1] == None:
                 self.datos[1] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[1] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_comillas":
             
             if self.datos[2] == None:
                 self.datos[2] = dato
+                self.informacion[2] = inf
+                self.orden.append(token)
             else:
                 if self.datos[4] == None:
                     self.datos[4] = dato
+                    self.informacion[4] = inf
+                    self.orden.append(token)
                 else:
                     print("error sintactico, comillas extras")
+                    error = [dato, "error sintactico: comillas extras", inf.linea, inf.col]
+                    self.errores.append(error)
             
-            if token == token_esperado:
-                self.contador += 1
-            else:
-                print("error sintactico, comillas no esperadas")
                 
         elif token == "tk_string" :
             if self.datos[3] == None:
                 self.datos[3] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, string no esperado")
+                self.informacion[3] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, string repetido")
+                errores = [dato, "error sintactico: string repetido", inf.linea, inf.col]
+                self.errores.append(errores)
+                
                 
         elif token == "tk_parentesis_fin":
             if self.datos[5] == None:
                 self.datos[5] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, parentesis no esperado")
+                self.informacion[5] = inf
+                self.orden.append(token)
             else:
                 print("error sintactico, parentesis repetido")
+                error = [dato, "error sintactico: parentesis repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_punto_coma":
             if self.datos[6] == None:
                 self.datos[6] = dato
-                if token == token_esperado:
-                    self.contador += 1
-                else:
-                    print("error sintactico, punto y coma no esperado")
+                self.informacion[6] = inf
+                self.orden.append(token)
+                
             else:
                 print("error sintactico, punto y coma repetido")
+                error = [dato, "error sintactico: punto y coma repetido", inf.linea, inf.col]
+                self.errores.append(error)
                 
         elif token == "tk_salto_linea":
             fin = True
@@ -1733,5 +1820,39 @@ class exportar_reporte:
         for i in self.datos:
             indice = self.datos.index(i)
             if i == None:
-                token = self.patron[indice]
-                print("error sintactico" + "se esperaba: " + token)
+                lexema = self.lexemas[indice]
+                inf = self.encontrar_indice(indice)
+                print("error sintactico" + "se esperaba: " )
+                error = [lexema, "error sintactico: se esperaba caracter o palabra reservada", inf.linea, inf.col]
+                self.errores.append(error)
+                
+    def encontrar_indice(self, indice):
+        inf = self.informacion[indice]
+        if inf != None:
+            return inf
+        else:
+            if indice == len(self.informacion) - 1:
+                return self.informacion[indice - 1]
+            elif indice == 0:
+                return self.informacion[1]
+            else:
+                return self.informacion[indice - 1]
+    
+    def revisar_orden(self):
+        i = 0
+        j = 0
+        while i <= len(self.datos) - 1:
+            if self.datos[i] != None:
+                if self.patron[i] != self.orden[j]:
+                    print("error sintactico, orden incorrecto")
+                    error = [self.datos[i], "error sintactico: orden incorrecto", self.informacion[i].linea, self.informacion[i].col]
+                    self.errores.append(error)
+                i += 1
+                j += 1
+            else:
+                i += 1
+       
+    def ejecutar_errores(self):
+        self.encontrar_errores()
+        self.revisar_orden()
+    

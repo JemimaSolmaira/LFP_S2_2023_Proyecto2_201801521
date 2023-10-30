@@ -74,7 +74,7 @@ class informacion:
     
     def exportar_reporte(self, nombre_archivo):
         s = salida(nombre_archivo)
-        s.tabla_productos(nombre_archivo, self.registros)
+        s.tabla_productos(nombre_archivo, self.registros, self.claves)
         
 
     def buscar_clave(self, clave):

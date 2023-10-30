@@ -3,21 +3,23 @@ class salida:
         self.nombre_archivo = nombre_archivo
         
         
-    def tabla_productos(self,nombre_archivo, datos):
+    def tabla_productos(self,nombre_archivo, datos, encabezado):
         productos = []
         productos = datos
         contenido_tabla = ""
+        claves = []
+        claves = encabezado
         
         if len(productos) != 0:
             for i in productos:
                 
-               contenido_tabla += self.contenido_producto(i[0], i[1], i[2], i[3], i[4])
+               contenido_tabla += self.contenido_producto(i)
         else:
             print("No hay productos")
             return    
             
         contenido_archivo = self.encabezado("Reporte de Productos", "Productos")
-        contenido_archivo += self.inicio_tabla_producto() 
+        contenido_archivo += self.inicio_tabla_producto(claves) 
         contenido_archivo += contenido_tabla + self.cierre_tabla()
                 
         
@@ -85,14 +87,17 @@ class salida:
         titulo += "</head>\n<body>\n\n<h1>"+ str(titulo_tabla) + "</h1>\n"
         return  titulo
 
-    def inicio_tabla_producto(self):
+    def inicio_tabla_producto(self,val):
+        valores = []
+        valores = val
+        
         cadena = "<table border=\"1\">\n"
         cadena += "<tr>\n"
-        cadena += "<th>Codigo</th>\n"
-        cadena += "<th>Producto</th>\n"
-        cadena += "<th>Precio_compra</th>\n"
-        cadena += "<th>Precio_venta</th>\n"
-        cadena += "<th>Stock</th>\n"
+        
+        while len(valores) != 0:
+            print(valores[0])
+            cadena += "<th>"+ str(valores.pop(0)) +"</th>\n"
+        
         cadena += "</tr>\n"
         
         return cadena
@@ -122,14 +127,14 @@ class salida:
         return cadena
         
      
-    def contenido_producto(self, codigo, producto, precio_compra, precio_venta, stock):
+    def contenido_producto(self, productos):
+        pro = []
+        pro = productos
+        
         cadena = "<tr>\n"
-        cadena += "<td>"+ str(codigo) +"</td>\n"
-        cadena += "<td>"+ str(producto) +"</td>\n"
-        cadena += "<td>"+ str(precio_compra) +"</td>\n"
-        cadena += "<td>"+ str(precio_venta) +"</td>\n"
-        cadena += "<td>"+ str(stock) +"</td>\n"
-        cadena += "</tr>\n"
+        while len(pro) != 0:
+            cadena += "<td>"+ str(pro.pop(0)) +"</td>\n"
+
         
         return cadena   
    
@@ -168,11 +173,13 @@ class salida:
 if __name__ == '__main__':
     ta = salida("salida.html")
     
-    fila1 = [1, "producto1", 10, 15, 20]
-    fila2 = [2, "producto2", 10, 15, 20]
-    fila3 = [3, "producto3", 10, 15, 20]
-    fila4 = [4, "producto4", 10, 15, 20]
-    fila5 = [5, "producto5", 10, 15, 20]
+    encabezado = ["Codigo", "Producto", "Precio_compra", "Precio_venta", "Stock", "Descripcion"]
+    fila1 = [1, "producto1", 10, 15, 20, "descripcion"]
+    fila2 = [2, "producto2", 10, 15, 20, "descripcion"]
+    fila3 = [3, "producto3", 10, 15, 20, "descripcion"]
+    fila4 = [4, "producto4", 10, 15, 20, "descripcion"]
+    fila5 = [5, "producto5", 10, 15, 20, "descripcion"]
+    
     
     productos = []
     productos.append(fila1)
@@ -182,7 +189,7 @@ if __name__ == '__main__':
     productos.append(fila5)
     
     
-    ta.tabla_productos("salida", productos)
+    ta.tabla_productos("salida", productos, encabezado)
     
     
    
